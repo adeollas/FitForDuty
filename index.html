@@ -1,13 +1,690 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>FitForDuty</title>
-  <link rel="stylesheet" href="styles.css" />
+  <style>
+    :root {
+      --navy: #0f2742;
+      --navy2: #163b63;
+      --slate: #5e6b7a;
+      --bg: #f4f7fb;
+      --card: #ffffff;
+      --green: #2e9d64;
+      --amber: #c98515;
+      --red: #b93d3d;
+      --line: #dce3ec;
+      --text: #152033;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--navy), var(--navy2));
+      color: white;
+      padding: 22px 18px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      letter-spacing: 0.5px;
+      font-size: 30px;
+    }
+
+    header p {
+      margin: 8px 0 0;
+      opacity: 0.9;
+      font-size: 14px;
+    }
+
+    .container {
+      width: min(1100px, 94vw);
+      margin: 22px auto 80px;
+    }
+
+    .login-card, .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: 0 10px 30px rgba(15,39,66,0.08);
+    }
+
+    .login-card {
+      max-width: 480px;
+      margin: 30px auto;
+      padding: 24px;
+    }
+
+    .login-card h2, .card h2, .card h3 {
+      margin-top: 0;
+    }
+
+    label {
+      display: block;
+      font-weight: 700;
+      margin: 14px 0 6px;
+      color: var(--navy);
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      font-size: 15px;
+      background: white;
+    }
+
+    textarea { min-height: 90px; resize: vertical; }
+
+    button {
+      border: none;
+      background: var(--navy);
+      color: white;
+      padding: 12px 15px;
+      border-radius: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 15px;
+    }
+
+    button.secondary {
+      background: #eef3f8;
+      color: var(--navy);
+      border: 1px solid var(--line);
+    }
+
+    button.green { background: var(--green); }
+    button.amber { background: var(--amber); }
+    button.red { background: var(--red); }
+
+    button:hover { filter: brightness(0.97); }
+
+    .button-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+
+    .hint {
+      color: var(--slate);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .demo-box {
+      background: #eef3f8;
+      border: 1px dashed #b6c4d6;
+      padding: 14px;
+      border-radius: 14px;
+      margin-top: 16px;
+      font-size: 14px;
+    }
+
+    .hidden { display: none !important; }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 14px 0 20px;
+    }
+
+    .tab {
+      background: white;
+      color: var(--navy);
+      border: 1px solid var(--line);
+    }
+
+    .tab.active {
+      background: var(--navy);
+      color: white;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 16px;
+    }
+
+    .card {
+      padding: 18px;
+      grid-column: span 4;
+    }
+
+    .card.wide { grid-column: span 8; }
+    .card.full { grid-column: span 12; }
+
+    .metric {
+      font-size: 34px;
+      font-weight: 800;
+      color: var(--navy);
+      margin: 8px 0 2px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      background: #eef3f8;
+      color: var(--navy);
+    }
+
+    .badge.green { background: #e4f5ec; color: var(--green); }
+    .badge.amber { background: #fff3da; color: var(--amber); }
+    .badge.red { background: #fce8e8; color: var(--red); }
+
+    .list {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .list-item {
+      background: #f8fafc;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px;
+    }
+
+    .list-item strong { color: var(--navy); }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .chat-box {
+      height: 280px;
+      overflow-y: auto;
+      background: #f8fafc;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px;
+      display: grid;
+      gap: 10px;
+      align-content: start;
+    }
+
+    .message {
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: white;
+      border: 1px solid var(--line);
+    }
+
+    .message.me {
+      background: #e9f2ff;
+      border-color: #c9ddfa;
+    }
+
+    .message small {
+      display: block;
+      color: var(--slate);
+      margin-top: 3px;
+    }
+
+    .footer-note {
+      text-align: center;
+      color: var(--slate);
+      font-size: 12px;
+      margin-top: 20px;
+    }
+
+    @media (max-width: 800px) {
+      .card, .card.wide { grid-column: span 12; }
+      .two-col { grid-template-columns: 1fr; }
+      .topbar { align-items: flex-start; flex-direction: column; }
+      header h1 { font-size: 25px; }
+    }
+  </style>
 </head>
 <body>
-  <div id="app"></div>
-  <script src="app.js"></script>
+  <header>
+    <h1>FitForDuty</h1>
+    <p>Fitness, readiness, and accountability for mission-ready professionals.</p>
+  </header>
+
+  <main class="container">
+    <section id="auth" class="login-card">
+      <h2>Private Access</h2>
+      <p class="hint">This prototype uses demo login data stored only in your browser. It is not connected to Firebase yet.</p>
+
+      <label for="email">Email</label>
+      <input id="email" type="email" placeholder="coach@fitforduty.local" />
+
+      <label for="code">Invite Code / Password</label>
+      <input id="code" type="text" placeholder="READY24" />
+
+      <div class="button-row">
+        <button onclick="login()">Log In</button>
+        <button class="secondary" onclick="activateInvite()">Activate Invite</button>
+      </div>
+
+      <div class="demo-box">
+        <strong>Demo Logins</strong><br>
+        Coach: <code>coach@fitforduty.local</code><br>
+        Client: <code>garcia@demo.local</code><br>
+        Invite Demo: <code>invite@demo.local</code> + code <code>READY24</code>
+      </div>
+    </section>
+
+    <section id="app" class="hidden">
+      <div class="topbar">
+        <div>
+          <h2 id="welcome">Welcome</h2>
+          <span id="roleBadge" class="badge"></span>
+        </div>
+        <button class="secondary" onclick="logout()">Log Out</button>
+      </div>
+
+      <nav id="tabs" class="tabs"></nav>
+
+      <section id="coachDashboard" class="view hidden">
+        <div class="grid">
+          <div class="card">
+            <h3>Active Users</h3>
+            <div class="metric">4</div>
+            <span class="badge green">Invite-only</span>
+          </div>
+          <div class="card">
+            <h3>Workouts Completed</h3>
+            <div class="metric">12</div>
+            <span class="badge green">This week</span>
+          </div>
+          <div class="card">
+            <h3>Check-ins Due</h3>
+            <div class="metric">2</div>
+            <span class="badge amber">Needs review</span>
+          </div>
+
+          <div class="card wide">
+            <h3>Flagged Users</h3>
+            <div class="list">
+              <div class="list-item"><strong>Officer Garcia</strong><br><span class="badge amber">High soreness</span> Sleep 5/10, Soreness 8/10</div>
+              <div class="list-item"><strong>Officer Smith</strong><br><span class="badge red">Missed check-in</span> No weekly check-in submitted</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Quick Actions</h3>
+            <div class="button-row">
+              <button onclick="showView('invite')">Invite User</button>
+              <button class="secondary" onclick="showView('programs')">Create Program</button>
+              <button class="secondary" onclick="showView('chat')">Open Chat</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="clientDashboard" class="view hidden">
+        <div class="grid">
+          <div class="card wide">
+            <h3>Today’s Workout</h3>
+            <p><strong>Full Body Strength</strong></p>
+            <p class="hint">Estimated time: 45 minutes. Focus on controlled movement and clean reps.</p>
+            <button onclick="showView('workout')">Start Workout</button>
+          </div>
+
+          <div class="card">
+            <h3>Today’s Status</h3>
+            <div class="metric">Ready</div>
+            <span class="badge green">7/10</span>
+          </div>
+
+          <div class="card">
+            <h3>Habits</h3>
+            <div class="list">
+              <label><input type="checkbox" style="width:auto"> Hydration</label>
+              <label><input type="checkbox" style="width:auto"> Mobility</label>
+              <label><input type="checkbox" style="width:auto"> Protein Goal</label>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Progress Snapshot</h3>
+            <p><strong>Weight:</strong> 198 lb</p>
+            <p><strong>Body Fat:</strong> 18%</p>
+            <button class="secondary" onclick="showView('progress')">Log Progress</button>
+          </div>
+
+          <div class="card">
+            <h3>Coach Message</h3>
+            <p class="hint">“Good work last session. Keep the pace smooth this week.”</p>
+            <button class="secondary" onclick="showView('messages')">Open Messages</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="workout" class="view hidden">
+        <div class="card full">
+          <h2>Full Body Strength</h2>
+          <p class="hint">Complete each movement with good control. Log weight and reps as you go.</p>
+          <div class="list">
+            <div class="list-item"><strong>Goblet Squat</strong><br>4 sets x 8 reps, 90 sec rest<br><input placeholder="Weight used"><input placeholder="Reps completed"></div>
+            <div class="list-item"><strong>Push-Up</strong><br>3 sets x max quality reps, 60 sec rest<br><input placeholder="Reps completed"></div>
+            <div class="list-item"><strong>Dumbbell Row</strong><br>4 sets x 10 reps, each side<br><input placeholder="Weight used"><input placeholder="Reps completed"></div>
+            <div class="list-item"><strong>Farmer Carry</strong><br>4 rounds x 40 yards<br><input placeholder="Weight used"><input placeholder="Notes"></div>
+          </div>
+          <div class="button-row">
+            <button class="green" onclick="alert('Workout saved in prototype mode.')">Mark Workout Complete</button>
+            <button class="secondary" onclick="showHome()">Back Home</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="progress" class="view hidden">
+        <div class="grid">
+          <div class="card full">
+            <h2>Log Progress</h2>
+            <div class="two-col">
+              <div>
+                <label>Date</label>
+                <input type="date">
+              </div>
+              <div>
+                <label>Weight</label>
+                <input type="number" placeholder="198">
+              </div>
+              <div>
+                <label>Body Fat % if known</label>
+                <input type="number" placeholder="18">
+              </div>
+              <div>
+                <label>Notes</label>
+                <input placeholder="Feeling stronger this week">
+              </div>
+            </div>
+            <div class="button-row">
+              <button class="green" onclick="alert('Progress saved in prototype mode.')">Save Progress</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Weight Trend</h3>
+            <p class="metric">198</p>
+            <p class="hint">Down 2 lb from previous entry.</p>
+          </div>
+          <div class="card">
+            <h3>Body Fat</h3>
+            <p class="metric">18%</p>
+            <p class="hint">Optional user-entered value.</p>
+          </div>
+          <div class="card">
+            <h3>Entries</h3>
+            <p class="metric">6</p>
+            <p class="hint">Prototype sample data.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="checkin" class="view hidden">
+        <div class="card full">
+          <h2>Weekly Check-In</h2>
+          <div class="two-col">
+            <div><label>Weight</label><input type="number"></div>
+            <div><label>Sleep 1-10</label><input type="number" min="1" max="10"></div>
+            <div><label>Soreness 1-10</label><input type="number" min="1" max="10"></div>
+            <div><label>Stress 1-10</label><input type="number" min="1" max="10"></div>
+            <div><label>Energy 1-10</label><input type="number" min="1" max="10"></div>
+            <div><label>Motivation 1-10</label><input type="number" min="1" max="10"></div>
+          </div>
+          <label>Notes</label>
+          <textarea placeholder="Anything your coach should know?"></textarea>
+          <button class="green" onclick="alert('Check-in saved in prototype mode.')">Submit Check-In</button>
+        </div>
+      </section>
+
+      <section id="messages" class="view hidden">
+        <div class="card full">
+          <h2>Direct Messages</h2>
+          <div id="directChat" class="chat-box"></div>
+          <label>Message</label>
+          <input id="directInput" placeholder="Type a message">
+          <div class="button-row"><button onclick="sendDirect()">Send</button></div>
+        </div>
+      </section>
+
+      <section id="chat" class="view hidden">
+        <div class="grid">
+          <div class="card full">
+            <h2>Group Chat</h2>
+            <div id="groupChat" class="chat-box"></div>
+            <label>Message</label>
+            <input id="groupInput" placeholder="Post to group chat">
+            <div class="button-row"><button onclick="sendGroup()">Send</button></div>
+          </div>
+          <div class="card full">
+            <h2>Announcements</h2>
+            <div class="list" id="announcements"></div>
+            <div id="announcementForm" class="hidden">
+              <label>New Announcement</label>
+              <input id="announcementInput" placeholder="LTFT registration opens Monday">
+              <div class="button-row"><button onclick="postAnnouncement()">Post Announcement</button></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="invite" class="view hidden">
+        <div class="card full">
+          <h2>Invite User</h2>
+          <p class="hint">Prototype only. In the Firebase version, this will create a real invite code.</p>
+          <label>Full Name</label>
+          <input placeholder="Employee Name">
+          <label>Email</label>
+          <input placeholder="employee@email.com">
+          <label>Role</label>
+          <select><option>client</option><option>coach</option></select>
+          <div class="button-row">
+            <button class="green" onclick="alert('Invite created in prototype mode. Demo code: READY24')">Create Invite</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="programs" class="view hidden">
+        <div class="card full">
+          <h2>Program Builder</h2>
+          <label>Program Title</label>
+          <input placeholder="8-Week Patrol Readiness Block">
+          <label>Description</label>
+          <textarea placeholder="Strength, conditioning, mobility, and readiness."></textarea>
+          <label>Workout Day</label>
+          <input placeholder="Day 1 - Full Body Strength">
+          <label>Exercise</label>
+          <input placeholder="Goblet Squat - 4x8">
+          <div class="button-row">
+            <button class="green" onclick="alert('Program saved in prototype mode.')">Save Program</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="users" class="view hidden">
+        <div class="card full">
+          <h2>User Management</h2>
+          <div class="list">
+            <div class="list-item"><strong>Officer Garcia</strong><br>Role: client | Status: active <br><button class="secondary">Open Profile</button></div>
+            <div class="list-item"><strong>Officer Smith</strong><br>Role: client | Status: active <br><button class="secondary">Open Profile</button></div>
+            <div class="list-item"><strong>Invite Pending</strong><br>Role: client | Status: pending <br><button class="red">Cancel Invite</button></div>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <p class="footer-note">FitForDuty prototype. Path A: free web app, no uploads, no hosted videos, no app store required.</p>
+  </main>
+
+  <script>
+    const users = {
+      "coach@fitforduty.local": { name: "Coach Fredo", role: "coach", status: "active" },
+      "garcia@demo.local": { name: "Officer Garcia", role: "client", status: "active" }
+    };
+
+    let currentUser = null;
+    let directMessages = [
+      { sender: "Coach Fredo", text: "Good work last session. Keep the pace smooth this week." }
+    ];
+    let groupMessages = [
+      { sender: "Coach Fredo", text: "Welcome to FitForDuty. Stay consistent and support each other." },
+      { sender: "Officer Garcia", text: "Mobility work helped a lot this week." }
+    ];
+    let announcements = [
+      { title: "LTFT Reminder", text: "Keep an eye out for the next Lincoln Tactical Fitness Test announcement." }
+    ];
+
+    function login() {
+      const email = document.getElementById("email").value.trim().toLowerCase();
+      const code = document.getElementById("code").value.trim();
+      if (users[email]) {
+        currentUser = { email, ...users[email] };
+        enterApp();
+      } else if (email === "invite@demo.local" && code === "READY24") {
+        currentUser = { email, name: "Invited User", role: "client", status: "active" };
+        enterApp();
+      } else {
+        alert("Demo login not found. Try coach@fitforduty.local or garcia@demo.local");
+      }
+    }
+
+    function activateInvite() {
+      const email = document.getElementById("email").value.trim().toLowerCase();
+      const code = document.getElementById("code").value.trim();
+      if (email && code === "READY24") {
+        currentUser = { email, name: "New FitForDuty User", role: "client", status: "active" };
+        enterApp();
+      } else {
+        alert("Use invite code READY24 for this demo.");
+      }
+    }
+
+    function enterApp() {
+      document.getElementById("auth").classList.add("hidden");
+      document.getElementById("app").classList.remove("hidden");
+      document.getElementById("welcome").textContent = "Welcome, " + currentUser.name;
+      const badge = document.getElementById("roleBadge");
+      badge.textContent = currentUser.role.toUpperCase();
+      badge.className = "badge " + (currentUser.role === "coach" ? "green" : "");
+      buildTabs();
+      renderChats();
+      renderAnnouncements();
+      showHome();
+    }
+
+    function logout() {
+      currentUser = null;
+      document.getElementById("app").classList.add("hidden");
+      document.getElementById("auth").classList.remove("hidden");
+      document.getElementById("email").value = "";
+      document.getElementById("code").value = "";
+    }
+
+    function buildTabs() {
+      const tabs = document.getElementById("tabs");
+      const coachTabs = [
+        ["home", "Dashboard"], ["users", "Users"], ["programs", "Programs"], ["chat", "Chat"], ["invite", "Invites"]
+      ];
+      const clientTabs = [
+        ["home", "Home"], ["workout", "Workout"], ["progress", "Progress"], ["checkin", "Check-In"], ["messages", "Messages"], ["chat", "Group Chat"]
+      ];
+      const data = currentUser.role === "coach" ? coachTabs : clientTabs;
+      tabs.innerHTML = data.map(([view, label]) => `<button class="tab" data-view="${view}" onclick="showView('${view}')">${label}</button>`).join("");
+    }
+
+    function showHome() {
+      if (currentUser.role === "coach") showView("coachDashboard");
+      else showView("clientDashboard");
+    }
+
+    function showView(view) {
+      document.querySelectorAll(".view").forEach(v => v.classList.add("hidden"));
+      document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+
+      let actualView = view;
+      if (view === "home") actualView = currentUser.role === "coach" ? "coachDashboard" : "clientDashboard";
+      const el = document.getElementById(actualView);
+      if (el) el.classList.remove("hidden");
+
+      document.querySelectorAll(`.tab[data-view="${view}"]`).forEach(t => t.classList.add("active"));
+      if (view === "chat") renderChats();
+      if (view === "messages") renderChats();
+      if (view === "chat") renderAnnouncements();
+
+      const announcementForm = document.getElementById("announcementForm");
+      if (announcementForm) {
+        announcementForm.classList.toggle("hidden", currentUser.role !== "coach");
+      }
+    }
+
+    function renderChats() {
+      const direct = document.getElementById("directChat");
+      if (direct) {
+        direct.innerHTML = directMessages.map(m => `<div class="message ${m.sender === currentUser?.name ? "me" : ""}"><strong>${escapeHtml(m.sender)}</strong><br>${escapeHtml(m.text)}<small>Prototype message</small></div>`).join("");
+      }
+      const group = document.getElementById("groupChat");
+      if (group) {
+        group.innerHTML = groupMessages.map(m => `<div class="message ${m.sender === currentUser?.name ? "me" : ""}"><strong>${escapeHtml(m.sender)}</strong><br>${escapeHtml(m.text)}<small>Group chat</small></div>`).join("");
+      }
+    }
+
+    function sendDirect() {
+      const input = document.getElementById("directInput");
+      const text = input.value.trim();
+      if (!text) return;
+      directMessages.push({ sender: currentUser.name, text });
+      input.value = "";
+      renderChats();
+    }
+
+    function sendGroup() {
+      const input = document.getElementById("groupInput");
+      const text = input.value.trim();
+      if (!text) return;
+      groupMessages.push({ sender: currentUser.name, text });
+      input.value = "";
+      renderChats();
+    }
+
+    function renderAnnouncements() {
+      const box = document.getElementById("announcements");
+      if (!box) return;
+      box.innerHTML = announcements.map(a => `<div class="list-item"><strong>${escapeHtml(a.title)}</strong><br>${escapeHtml(a.text)}</div>`).join("");
+    }
+
+    function postAnnouncement() {
+      const input = document.getElementById("announcementInput");
+      const text = input.value.trim();
+      if (!text) return;
+      announcements.unshift({ title: "Coach Announcement", text });
+      input.value = "";
+      renderAnnouncements();
+    }
+
+    function escapeHtml(text) {
+      return String(text).replace(/[&<>"']/g, function(m) {
+        return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[m];
+      });
+    }
+  </script>
 </body>
 </html>
